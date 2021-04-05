@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useMonaco } from "@monaco-editor/react";
+import { useEffect } from "react";
+import { MonacoBinding } from "y-monaco";
+import { options } from "./editorOptions";
+import { useYjs } from "./hooks/useYjs";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const monaco = useMonaco();
+  const { type, provider } = useYjs();
+
+  useEffect(() => {
+    if (monaco && provider !== null && type !== null) {
+      const editor = monaco.editor.create(
+        document.getElementById("monaco-editor"),
+        { ...options, language: "javascript" }
+      );
+      monaco.editor.setTheme("vs-dark");
+      new MonacoBinding(
+        type,
+        editor.getModel(),
+        new Set([editor]),
+        provider.awareness
+      );
+    }
+  }, [monaco, provider, type]);
+
+  return <div id="monaco-editor" style={{ height: "100vh" }}></div>;
 }
 
 export default App;
