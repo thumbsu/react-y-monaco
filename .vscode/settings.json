@@ -1,6 +1,15 @@
 {
-  "cSpell.words": [
-    "Webrtc",
-    "ydoc"
-  ]
+  "javascript.format.enable": false,
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
+  "sort-imports.on-save": true,
+  "sort-imports.default-sort-style": "eslint",
+  "eslint.workingDirectories": ["./src"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.words": ["Webrtc", "ydoc"]
 }
