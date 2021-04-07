@@ -1,4 +1,4 @@
-# React && Yjs && Monaco Editor
+# Playground
 
 ## Stack
 
