@@ -1,31 +1,41 @@
 import * as Y from 'yjs'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { WebrtcProvider } from 'y-webrtc'
+import { WebsocketProvider } from 'y-websocket'
 
-export function useYjs() {
+export enum ProviderType {
+  WEBSOCKET,
+  WEBRTC,
+}
+
+export interface IUseYjsProps {
+  roomName: string
+  providerType?: ProviderType
+}
+
+export function useYjs({ roomName, providerType }: IUseYjsProps) {
   const [ydoc, setYdoc] = useState<Y.Doc | null>(null)
-  const [provider, setProvider] = useState<WebrtcProvider | null>(null)
+  const [provider, setProvider] = useState<WebrtcProvider | WebsocketProvider | null>(null)
   const [type, setType] = useState<Y.Text | null>(null)
 
-  useEffect(() => {
-    if (ydoc === null) {
-      setYdoc(new Y.Doc())
-    }
-  }, [ydoc])
-
-  useEffect(() => {
-    if (ydoc !== null && provider === null) {
-      setProvider(new WebrtcProvider('monaco', ydoc))
-    }
+  const createProviderInstance = useCallback(() => {
+    if (ydoc === null || provider !== null) return
+    if (providerType === ProviderType.WEBRTC) setProvider(new WebrtcProvider(roomName, ydoc))
+    else setProvider(new WebsocketProvider('ws://127.0.0.1:8000', roomName, ydoc))
   }, [ydoc, provider])
 
+  const createYMap = useCallback(() => {
+    if (ydoc === null || type !== null) return
+    setType(ydoc.getText(roomName))
+  }, [type, provider])
+
   useEffect(() => {
-    if (ydoc !== null && type === null) {
-      setType(ydoc.getText('monaco'))
-    }
-  }, [type, ydoc])
+    if (ydoc === null) setYdoc(new Y.Doc())
+    else if (ydoc !== null && provider === null) createProviderInstance()
+    if (ydoc !== null && type === null) createYMap()
+  }, [ydoc, provider, type])
 
   return { type, provider }
 }

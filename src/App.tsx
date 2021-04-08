@@ -1,17 +1,16 @@
-import MonacoEditor from './MonacoEditor'
-import { options } from './editorOptions'
+import { Route, Router } from 'react-router'
 
-function App() {
+import Playground from './Playground'
+import { createBrowserHistory } from 'history'
+
+const defaultHistory = createBrowserHistory()
+
+function App({ history = defaultHistory }) {
   return (
     <>
-      <div style={{ height: '100vh' }}>
-        <MonacoEditor
-          value="// some code"
-          language="javascript"
-          options={options}
-          theme="vs-dark"
-        />
-      </div>
+      <Router history={history}>
+        <Route exact path="/:room" component={Playground} />
+      </Router>
     </>
   )
 }

@@ -2,6 +2,7 @@ node_modules/
 public/
 .eslintrc.js
 .prettierrc.js
+config-overrides.js
 src/reportWebVitals.js
 src/setupProxy.js
 src/setupTests.js

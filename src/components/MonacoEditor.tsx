@@ -1,22 +1,30 @@
 import { FC, useEffect, useRef, useState } from 'react'
+import { ProviderType, useYjs } from '../hooks/useYjs'
 import type { Uri, editor } from 'monaco-editor'
 
 import { MonacoBinding } from 'y-monaco'
 import { useMonaco } from '@monaco-editor/react'
-import { useYjs } from './hooks/useYjs'
 
 export interface IMonacoEditorProps {
-  value: string
+  roomName: string
+  value?: string
   language?: string
   path?: Uri
   options?: any
   theme?: string
 }
 
-const MonacoEditor: FC<IMonacoEditorProps> = ({ value, language, path, options, theme }) => {
+const MonacoEditor: FC<IMonacoEditorProps> = ({
+  roomName,
+  language,
+  path,
+  options,
+  theme,
+  value = '',
+}) => {
   const node = useRef<HTMLDivElement | null>(null)
   const monaco = useMonaco()
-  const { type, provider } = useYjs()
+  const { type, provider } = useYjs({ roomName, providerType: ProviderType.WEBRTC })
 
   const [model, setModel] = useState<editor.ITextModel | null>(null)
   const [editor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null)
